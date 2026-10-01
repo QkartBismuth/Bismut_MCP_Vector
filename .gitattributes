@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+*.ts text
+*.mjs text
+*.json text
+*.md text
+*.yml text
+*.yaml text
+LICENSE text
+
+*.dll binary
+*.onnx binary
+*.db binary
+*.db-wal binary
+*.db-shm binary

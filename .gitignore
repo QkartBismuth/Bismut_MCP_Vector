@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.bismut/
+.bismut-test/
+*.log
+.DS_Store

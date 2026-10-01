@@ -1,0 +1,85 @@
+# opencode
+
+The server is registered globally in `~/.config/opencode/opencode.jsonc` as
+`bismut-vector`.
+
+## What was added
+
+```json
+"mcp": {
+    "bismut-vector": {
+        "type": "local",
+        "command": [
+            "C:/Program Files/nodejs/node.exe",
+            "/path/to/Bismut_MCP_Vector/dist/index.js"
+        ],
+        "enabled": true,
+        "environment": {
+            "BISMUT_DB_PATH": "/path/to/Bismut_MCP_Vector/.bismut/vectors.db",
+            "BISMUT_CACHE_DIR": "/path/to/Bismut_MCP_Vector/.bismut/cache",
+            "BISMUT_LOG_LEVEL": "warn"
+        }
+    }
+}
+```
+
+## Why these values
+
+- `node.exe` is absolute so the server does not depend on `PATH`.
+- Paths are absolute so the entry works no matter which directory opencode was
+  started from.
+- `BISMUT_DB_PATH` is explicit for the same reason: the database must not move
+  when the working directory changes.
+- `BISMUT_LOG_LEVEL` is `warn` so ordinary startup chatter stays out of the
+  session while real problems remain visible.
+
+## Verifying
+
+`scripts/verify-opencode-config.mjs` reads the live opencode config, iterates
+every registered server, and performs a real MCP handshake with the exact
+command and environment values it finds there.
+
+```powershell
+npm run verify:opencode                        # uses the current directory
+npm run verify:opencode -- /path/to/some-project
+```
+
+Pass a path to check how the server behaves inside a specific project.
+
+## Per-project overrides
+
+Project config deep-merges over global, so list only what differs:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "bismut-vector": {
+      "environment": { "BISMUT_COLLECTION": "myproject" }
+    }
+  }
+}
+```
+
+Setting a distinct `BISMUT_COLLECTION` per project keeps corpora separate.
+
+To disable the server for one project:
+
+```json
+{ "mcp": { "bismut-vector": { "enabled": false } } }
+```
+
+## Verifying in a session
+
+Ask opencode what tools it has, or go straight to work:
+
+> Index this repository with index_paths, then search it for how player input
+> is handled.
+
+The first `index_paths` call is slow because it downloads the embedding model
+(~120 MB) into `.bismut/cache`. Later calls are fast.
+
+## Removing
+
+Delete the `mcp` block from `~/.config/opencode/opencode.jsonc`. The database
+and model cache under `.bismut/` can be deleted independently.

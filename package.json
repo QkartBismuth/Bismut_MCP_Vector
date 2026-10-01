@@ -1,0 +1,37 @@
+{
+  "name": "bismut-vector-mcp",
+  "version": "0.0.1",
+  "private": true,
+  "description": "MCP server for a local vector database (sqlite-vec + local ONNX embeddings)",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "bismut-vector-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node scripts/smoke-test.mjs",
+    "test:chunks": "npm run build && node scripts/chunk-quality.mjs",
+    "verify:opencode": "node scripts/verify-opencode-config.mjs",
+    "clean": "node -e \"import('node:fs').then(f=>f.rmSync('dist',{recursive:true,force:true}))\""
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.0",
+    "@modelcontextprotocol/sdk": "^1.31.0",
+    "sqlite-vec": "^0.1.9",
+    "unpdf": "^1.8.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
